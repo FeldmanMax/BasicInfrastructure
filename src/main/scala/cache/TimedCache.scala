@@ -1,6 +1,7 @@
 package cache
 
 import com.google.common.cache.{Cache, CacheBuilder}
+import logger.ApplicationLogger
 
 class TimedCache[Key<:Object, Value<:Object](val concurrencyLevel:  Int=6,
                                              val timeoutMinutes:    Int=10)
@@ -24,11 +25,11 @@ class TimedCache[Key<:Object, Value<:Object](val concurrencyLevel:  Int=6,
   @inline def getWithError(key: Key): Either[String, Value] = {
     try{
       val result = gCache.getIfPresent(key)
-      if(result == null)  Left(s"Key $key was not found")
+      if(result == null)  ApplicationLogger.errorLeft(s"Key $key was not found")
       else                Right(result)
     }
     catch {
-      case ex: Exception => Left(ex.getMessage)
+      case ex: Exception => ApplicationLogger.errorLeft(ex.getMessage)
     }
   }
 
@@ -48,7 +49,7 @@ class TimedCache[Key<:Object, Value<:Object](val concurrencyLevel:  Int=6,
 
   @inline def getAll(): Either[String, List[Value]] = {
     val list: List[Either[String, Value]] = getAllKeys().map(getWithError)
-    if(list.exists(x=>x.isLeft))  Left(list.filter(x=>x.isLeft).map(x=>x.left.get) mkString "\\n")
+    if(list.exists(x=>x.isLeft))  ApplicationLogger.errorLeft(list.filter(x=>x.isLeft).map(x=>x.left.get) mkString "\\n")
     else                          Right(list.map(x=>x.right.get))
   }
 

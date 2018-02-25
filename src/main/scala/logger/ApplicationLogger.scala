@@ -65,17 +65,22 @@ object ApplicationLogger {
   private val logger: LoggerBase = ApplicationLoggerFactory.get
 
   def info[T <: AnyRef](data: T): Unit = logger.log(Level.INFO, data)
+  def infoLeft[T <: AnyRef](data: T): Left[T, Nothing] = { info(data); Left(data) }
   def info(data: String): Unit = logger.log(Level.INFO, data)
 
   def debug[T <: AnyRef](data: T): Unit = logger.log(Level.DEBUG, data)
+  def debugLeft[T <: AnyRef](data: T): Left[T, Nothing] = { debug(data); Left(data) }
   def debug(data: String): Unit = logger.log(Level.DEBUG, data)
 
   def error[T <: AnyRef](data: T): Unit = logger.log(Level.ERROR, data)
+  def errorLeft[T <: AnyRef](data: T): Left[T, Nothing] = { error(data); Left(data) }
   def error(data: String): Unit = logger.log(Level.ERROR, data)
 
   def warn[T <: AnyRef](data: T): Unit = logger.log(Level.WARN, data)
+  def warnLeft[T <: AnyRef](data: T): Left[T, Nothing] = { warn(data); Left(data) }
   def warn(data: String): Unit = logger.log(Level.WARN, data)
 
   def trace[T <: AnyRef](data: T): Unit = logger.log(Level.TRACE, data)
+  def traceLeft[T <: AnyRef](data: T): Left[T, Nothing] = { trace(data); Left(data) }
   def trace(data: String): Unit = logger.log(Level.TRACE, data)
 }

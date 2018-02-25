@@ -9,18 +9,18 @@ import scala.util.matching.Regex
 
 class FileSystemService {
   def loadFile(path: String): Either[String, String] = {
-    ApplicationLogger.info(s"${this.getClass} -> load file -> $path")
+    ApplicationLogger.trace(s"${this.getClass} -> load file -> $path")
     try {
       val buffer: BufferedSource = Source.fromFile(path)
       try {
         val retValue: String = (buffer.getLines() mkString " ").toString
-        ApplicationLogger.info(s"${this.getClass} -> load file -> $path -> FINISH OK!")
+        ApplicationLogger.trace(s"${this.getClass} -> load file -> $path -> FINISH OK!")
         Right(retValue)
       }
       finally buffer.close()
     }
     catch {
-      case ex: Exception => Left(ex.getMessage)
+      case ex: Exception => ApplicationLogger.errorLeft(ex.getMessage)
     }
   }
 
@@ -34,10 +34,10 @@ class FileSystemService {
         Right(true)
       }
       catch {
-        case ex: Exception => Left(ex.getMessage)
+        case ex: Exception => ApplicationLogger.errorLeft(ex.getMessage)
       }
     }
-    else  Left("File is readonly")
+    else  ApplicationLogger.errorLeft("File is readonly")
   }
 
   def filesByExtension(path: String, extension: String): Either[String, List[String]] = {
@@ -47,7 +47,7 @@ class FileSystemService {
       Right(names)
     }
     catch {
-      case ex: Exception => Left(ex.getMessage)
+      case ex: Exception => ApplicationLogger.errorLeft(ex.getMessage)
     }
   }
 
@@ -56,13 +56,13 @@ class FileSystemService {
       Right(new File(path).delete())
     }
     catch {
-      case ex: SecurityException => Left(ex.getMessage)
+      case ex: SecurityException => ApplicationLogger.errorLeft(ex.getMessage)
     }
   }
 
   def deleteFiles(base_location: String, nameRegex: Regex): Either[String, Boolean] = {
     val filesToDelete: List[File] = new File(base_location).listFiles().toList.filter(file => nameRegex.findFirstIn(file.getName).nonEmpty)
-    if(filesToDelete.map { file => file.delete() }.distinct.contains(false))  Left("Failed to delete some files")
+    if(filesToDelete.map { file => file.delete() }.distinct.contains(false))  ApplicationLogger.errorLeft("Failed to delete some files")
     else                                                                      Right(true)
   }
 
@@ -75,7 +75,7 @@ class FileSystemService {
       Right(file)
     }
     catch {
-      case ex: Exception => Left(ex.getMessage)
+      case ex: Exception => ApplicationLogger.errorLeft(ex.getMessage)
     }
   }
 }

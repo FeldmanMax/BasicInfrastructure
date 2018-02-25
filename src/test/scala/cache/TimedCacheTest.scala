@@ -22,7 +22,7 @@ class TimedCacheTest extends FunSuite with BeforeAndAfter {
     cache.put("key_1", "value_1")
     cache.put("key_2", "value_2")
     cache.getAll() match {
-      case Left(left) => fail(left)c
+      case Left(left) => fail(left)
       case Right(result) => assert(result.contains("value_2"))
     }
   }
