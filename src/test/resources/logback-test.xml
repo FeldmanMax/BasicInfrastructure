@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" debug="true">
+    <appender name="Console-Appender" class="ch.qos.logback.core.ConsoleAppender">
+        <layout>
+            <pattern>%msg%n</pattern>
+        </layout>
+    </appender>
     <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>/tmp/basic_infra_info_test.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -60,5 +65,9 @@
     <logger name="debug" level="DEBUG" additivity="false">
         <appender-ref ref="FILE_DEBUG"/>
     </logger>
+
+    <root level="ALL">
+        <appender-ref ref="Console-Appender"/>
+    </root>
 
 </configuration>

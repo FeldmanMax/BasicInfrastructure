@@ -6,7 +6,7 @@ class TerminalCommanderTest extends FunSuite {
   test("pwd returns") {
     val terminalCommander: TerminalCommander = new TerminalCommander
     terminalCommander.run("pwd", (response: String) => {
-      if(!response.contains("BaseInfrastructure")) Left(s"Doesn't contain service in the path \n $response")
+      if(!response.contains("BasicInfrastructure")) Left(s"Doesn't contain service in the path \n $response")
       else                              Right("All Good")
     }) match {
       case Left(left) => fail(left.toString)
